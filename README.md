@@ -1,4 +1,4 @@
-# arcgis-calcite-template
+# arcgis-point-demo
 Template for a ArcGIS JS 4 mapping web app using [calcite](https://developers.arcgis.com/calcite-design-system/) components
 
 ## Importing ArcGIS ES Modules
