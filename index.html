@@ -37,62 +37,105 @@
         </calcite-navigation>
 
         <calcite-loader active></calcite-loader>
+
         <calcite-shell-panel slot="panel-start" position="start" display-mode="float-content" height="l" layout="vertical">
           <calcite-action-bar slot="action-bar" intl-collapse="Minimere" intl-expand="Maksimere">
-            <calcite-action data-action-id="layers" icon="layers" text="Kartlag"></calcite-action>
-            <calcite-action data-action-id="basemaps" icon="basemap" text="Bakgrunnskart"></calcite-action>
-            <calcite-action data-action-id="legend" icon="legend" text="Tegnforklaring"></calcite-action>
-            <calcite-action data-action-id="bookmarks" icon="bookmark" text="Bokmerker"></calcite-action>
-            <calcite-action data-action-id="print" icon="print" text="Utskrift"></calcite-action>
-            <calcite-action data-action-id="information" icon="information" text="Informasjon"></calcite-action>
-          </calcite-action-bar>
-
-          <!-- Map Components Panels -->
-          <calcite-panel heading="Kartlag" height-scale="l" width-scale="m" data-panel-id="layers">
-            <arcgis-layer-list id="layers-container" reference-element="viewDiv"></arcgis-layer-list>
-          </calcite-panel>
-          <calcite-panel heading="Bakgrunnskart" height-scale="l" width-scale="m" data-panel-id="basemaps" hidden>
-            <arcgis-basemap-gallery id="basemaps-container" reference-element="viewDiv"></arcgis-basemap-gallery>
-          </calcite-panel>
-          <calcite-panel heading="Tegnforklaring" height-scale="l" width-scale="m" data-panel-id="legend" hidden>
-            <arcgis-legend id="legend-container" reference-element="viewDiv"></arcgis-legend>
-          </calcite-panel>
-          <calcite-panel heading="Bokmerker" height-scale="l" width-scale="m" data-panel-id="bookmarks" hidden>
-            <arcgis-bookmarks id="bookmarks-container" reference-element="viewDiv"></arcgis-bookmarks>
-          </calcite-panel>
-          <calcite-panel heading="Utskrift" height-scale="l" width-scale="m" data-panel-id="print" hidden>
-            <arcgis-print id="print-container" reference-element="viewDiv" include-default-templates="false" allowed-formats="all" allowed-layouts="all"></arcgis-print>
+              <calcite-action data-action-id="pop-query" icon="chart-magnifying-glass" text="Befolkningsdata"></calcite-action>
+              <calcite-action data-action-id="viewshed" icon="viewshed" text="Siktanalyse"></calcite-action>
+              <calcite-action data-action-id="volume" icon="cut-and-fill-volume-calculation" text="Volumanalyser"></calcite-action>
+            </calcite-action-bar>
           </calcite-panel>
 
-          <!-- Custom Panels -->
-          <calcite-panel heading="Informasjon" data-panel-id="information" hidden>
-            <div id="info-content">
-              <img id="item-thumbnail" />
-              <div id="item-description">
-                <!--dynamically populated-->
-              </div>
+          <calcite-panel data-panel-id="pop-query" heading="Befolkningsstatistikk" scale="l">
+            <calcite-block  heading="Statistikk for området" icon-start="chart-magnifying-glass" description="Klikk og dra musepekeren i kartet for å oppdatere statistikken" collapsible expanded>
+              <calcite-block-section expanded text="Alderfordeling, mann vs kvinne">
+                <canvas id="population-age" class="pop-chart"></canvas>
+              </calcite-block-section>
+              <calcite-block-section expanded text="Formue">
+                <canvas id="population-wealth" class="pop-chart"></canvas>
+              </calcite-block-section>
+              <calcite-block-section expanded text="Bygningstyper">
+                <canvas id="building-type" class="pop-chart"></canvas>
+              </calcite-block-section>
+            </calcite-block>
+          </calcite-panel>
+
+          <calcite-panel heading="Siktanalyse" height-scale="l" width-scale="m" data-panel-id="viewshed" hidden>
+            <calcite-block  heading="Legg til utkikkspunkter" icon-start="viewshed" description="Analyser synligheten fra et utkikkspunkt i 3D-scenen." collapsible expanded>
+            <calcite-button id="createButton" class="panel-button" icon-end="viewshed">Legg til utsiktspunkt</calcite-button>
+            <calcite-button id="deleteButton" class="panel-button" style="display:none" icon-end="trash" kind="danger">Slett siktområder</calcite-button>
+            <calcite-button id="cancelButton" class="panel-button" style="display:none" icon-end="x-circle" kind="inverse">Avbryt</calcite-button>
+            </calcite-block>
+            <calcite-block heading="Lysforhold" icon-start="brightness" description="Juster tid på dagen for å se hvordan solens posisjon påvirker siktlinjene." collapsible>
+              <arcgis-shadow-cast id="shadow-cast-ui" reference-element="sceneDiv"></arcgis-shadow-cast>
+            </calcite-block>
+            <calcite-block  heading="Byggeprosjekt" icon-start="3d-building" description="Legg til et byggeprosjekt for å se hvordan det påvirker siktlinjene." collapsible expanded>
               <calcite-label layout="inline">
-                <b>Vurdering:</b>
-                <calcite-rating read-only>
-                  <!--dynamically populated-->
-                </calcite-rating>
+                Slå på byggeprosjekt
+                <calcite-switch id="building-visibility-switch"></calcite-switch>
               </calcite-label>
+              <calcite-label>
+                Antall etasjer
+                <calcite-slider id="building-levels-slider" min="1" max="9" value="9" label-handles label-ticks min-label="1" max-label="9" ticks="1"></calcite-slider>
+              </calcite-label>
+            </calcite-block>
+          </calcite-panel>
+
+          <calcite-panel heading="Volumanalyser" height-scale="l" width-scale="m" data-panel-id="volume" hidden>
+            <div class="panel-tool-container">
+               <calcite-block  heading="Utfylling- og skjæringsformål" icon-start="cut-and-fill-volume-calculation" description="Beregn volumet av jord som må fjernes eller legges til for å jevne ut et område." collapsible expanded>
+                <calcite-label layout="inline-space-between" id="unit-label">
+                  Enheter
+                  <calcite-select id="units-select" scale="s">
+                    <calcite-option value="metric" selected>Metrisk</calcite-option>
+                    <calcite-option value="imperial">Imperial</calcite-option>
+                    <calcite-option value="cubic-meters">Kubikkmeter</calcite-option>
+                    <calcite-option value="cubic-kilometers">Kubikkkilometers</calcite-option>
+                    <calcite-option value="cubic-feet">Cubic feet</calcite-option>
+                    <calcite-option value="cubic-yards">Cubic yards</calcite-option>
+                    <calcite-option value="cubic-miles">Cubic miles</calcite-option>
+                  </calcite-select>
+                </calcite-label>
+                <calcite-label alignment="start" layout="inline-space-between">
+                  Fjernet masse
+                  <div id="cut-volume" class="measurement-vals">—</div>
+                </calcite-label>
+                <calcite-label alignment="start" layout="inline-space-between">
+                  Utfylt masse
+                  <div id="fill-volume" class="measurement-vals">—</div>
+                </calcite-label>
+                <calcite-label alignment=" start" layout="inline-space-between">
+                  Totalt volum
+                  <div id="net-volume" class="measurement-vals">—</div>
+                </calcite-label>
+                <calcite-label id="edit-measurement-label">
+                  <calcite-button id="edit-measurement" width="full">Redigere måling</calcite-button>
+                </calcite-label>
+              </calcite-block>
             </div>
           </calcite-panel>
         </calcite-shell-panel>
         
-        <calcite-shell-panel slot="panel-end" position="end" display-mode="float" scale="l" layout="vertical">
-          <calcite-panel heading="Befolkningsstatistikk" scale="l">
+        <!--calcite-shell-panel slot="panel-end" position="end" display-mode="float" scale="l" layout="vertical">
+          <calcite-panel data-panel-id="pop-query" heading="Befolkningsstatistikk" scale="l">
             <canvas id="population-age" class="pop-chart"></canvas>
             <canvas id="population-wealth" class="pop-chart"></canvas>
             <canvas id="building-type" class="pop-chart"></canvas>
           </calcite-panel>
-        </calcite-shell-panel>
-        
-        <arcgis-map id="viewDiv" item-id="5c5fdf55cfed43109373ead88f8901bc">
-          <arcgis-search position="top-right"></arcgis-search>
+        </calcite-shell-panel-->
+
+        <arcgis-map id="mapDiv" item-id="5c5fdf55cfed43109373ead88f8901bc" auto-destroy-disabled>
+          <arcgis-search position="bottom-right"></arcgis-search>
           <arcgis-zoom position="bottom-right"></arcgis-zoom>
         </arcgis-map>
+
+        <arcgis-scene id="sceneDiv" item-id="bac30fa0028a41a48c174f1b71e0c379" auto-destroy-disabled>
+          <calcite-alert label="Measurement unavailable" kind="warning" scale="s">
+            <div slot="title">Volumberegning utilgjengelig</div>
+            <div slot="message" id="error-message"></div>
+          </calcite-alert>
+        </arcgis-scene>
+        
       </calcite-shell>
     
     </div> <!-- Calcite-theme-->

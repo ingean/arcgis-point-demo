@@ -41,7 +41,7 @@ export const createCharts = () => {
     {
       labels: ["Enebolig", "Tomannsbolig", "Rekkehus", "Bofelleskap", "Blokk", "Annen bolig"],
       datasets: [
-        { backgroundColor: ["#149dcf", "#a6c736", "#ed5050"], borderColor: "rgb(255, 255, 255)", borderWidth: 1, data: [0, 0, 0] },
+        { backgroundColor: ["#149dcf", "#a6c736", "#ed5050","#850e28ff", "#e19d14ff", "#3625bdff"], borderColor: "rgb(255, 255, 255)", borderWidth: 1, data: [1,1,1,1,1,1] },
       ],
     },
     { title: { text: "Bosituasjon (sum)", display: true } }

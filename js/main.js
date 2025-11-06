@@ -4,14 +4,19 @@ import ActionBar from './components/ActionBar.js'
 import { authenticate } from './utils/OAuth2.js'
 import { createCharts, updateCharts } from './components/popCharts.js'
 import { queryStatsOnDrag } from './components/layerStats.js'
+import { switchView } from './components/switchView.js'
+import { filterByFloorNumber, showDimensionsFloor, toggleBuildingLayer } from './components/buildingLayer.js'
 
 const appId = 'w8MteBiiYAwXiNdn' // AppId for Demo_oAuth2_Viewer
 const portal = await authenticate(appId) //Authenticate with named user using OAuth2
-const webmap = document.getElementById("viewDiv")
+const mapEl = document.getElementById("mapDiv")
+const sceneEl = document.getElementById("sceneDiv")
 
-const actionBar = new ActionBar('layers')
 
-webmap.addEventListener("arcgisViewReadyChange", (event) => {
+const actionBar = new ActionBar('pop-query')
+
+
+mapEl.addEventListener("arcgisViewReadyChange", async (event) => {
   const { portalItem } = event.target.map
   const navigationLogo = document.querySelector("calcite-navigation-logo")
   navigationLogo.heading = portalItem.title
@@ -21,12 +26,30 @@ webmap.addEventListener("arcgisViewReadyChange", (event) => {
   navigationLogo.label = "Thumbnail of map"
   
   document.querySelector("calcite-loader").hidden = true
+  const queryBtn = document.querySelector('[data-action-id="pop-query"]')
+  queryBtn.addEventListener("click", () => switchView("pop-query"))
+  
+  
+  const viewshedBtn = document.querySelector('[data-action-id="viewshed"]')
+  viewshedBtn.addEventListener("click", () => switchView("viewshed"))
 
+  const volumeBtn = document.querySelector('[data-action-id="volume"]')
+  volumeBtn.addEventListener("click", () => switchView("volume"))
+  const buildingVisibilitySwitch = document.getElementById("building-visibility-switch")
+  buildingVisibilitySwitch.addEventListener("calciteSwitchChange", (event) => {
+    toggleBuildingLayer(event.target.checked)
+  })
+
+  const buildingLevelsSlider = document.getElementById("building-levels-slider")
+  buildingLevelsSlider.addEventListener("calciteSliderInput", (event) => {
+    const selectedFloor = event.target.value;
+    showDimensionsFloor(selectedFloor);
+    filterByFloorNumber(selectedFloor); 
+  })
 })
 
-webmap.viewOnReady().then(() => {
-    console.log("Webmap and View are ready")
-    const layer = webmap.map.layers.getItemAt(1)
+mapEl.viewOnReady().then(() => {
+    const layer = mapEl.map.layers.getItemAt(1)
     layer.outFields = [
     "alm_u_5",
     "alm_6_12",
@@ -70,12 +93,12 @@ webmap.viewOnReady().then(() => {
 ]
     createCharts()
 
-    webmap.view.whenLayerView(layer).then((layerView) => {
+    mapEl.view.whenLayerView(layer).then((layerView) => {
       console.log("LayerView is ready")
       reactiveUtils
         .whenOnce(() => !layerView.updating)
         .then(() => {
-          webmap.view.on(["click", "drag"], (event) => {
+          mapEl.view.on(["click", "drag"], (event) => {
             event.stopPropagation();
             queryStatsOnDrag(layerView, event)
               .then(updateCharts)

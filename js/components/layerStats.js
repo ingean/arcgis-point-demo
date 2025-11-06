@@ -8,7 +8,7 @@ let highlightHandle = null;
 
 export const queryStatsOnDrag = promiseUtils.debounce((layerView, event) => {
   // create a query object for the highlight and the statistics query
-  let view = document.getElementById("viewDiv").view;
+  let view = document.getElementById("mapDiv").view;
   
   const query = layerView.layer.createQuery();
   query.geometry = view.toMap(event); // converts the screen point to a map point
