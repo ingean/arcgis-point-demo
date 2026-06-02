@@ -10,14 +10,14 @@ export const createCharts = () => {
     "population-age",
     "bar",
     {
-      labels: ["Under 5 år", "6 - 12 år", "13 - 15 år", "16 - 18 år", "19 - 23 år", "24 - 34 år", "35 - 44 år", "45 - 54 år", "55 - 64 år", "65 - 74 år", "75 - 84 år", "85 år og eldre"],
+      labels: ["<5 år", "6-12 år", "13-15 år", "16-18 år", "19-23 år", "24-34 år", "35-44 år", "45-54 år", "55-64 år", "65-74 år", "75-84 år", ">85 år"],
       datasets: [
         { label: "Menn", backgroundColor: "#149dcf", stack: "Stack 0", data: new Array(12).fill(0) },
         { label: "Kvinner", backgroundColor: "#ed5050", stack: "Stack 0", data: new Array(12).fill(0) },
       ],
     },
     {
-      title: { text: "Aldersfordeling (snitt)", display: true },
+      title: { text: "Aldersfordeling (snitt)", display: false },
     }
   );
 
@@ -25,13 +25,13 @@ export const createCharts = () => {
     "population-wealth",
     "bar",
     {
-      labels: ["0 - 49.999", "50 - 199.999", "200 - 399.999", "400 - 699.999", "700 - 999.999", "1 - 2 mill", "2 - 3 mill", "3 - 4 mill", "over 4 mill"],
+      labels: ["0-50k", "50-200k", "200-400k", "400-700k", "700-1mill", "1-2mill", "2-3mill", "3-4mill", "<4mill"],
       datasets: [
         { label: "Formue", backgroundColor: "#ed5050", stack: "Stack 0", data: new Array(9).fill(0) }
       ],
     },
     {
-      title: { text: "Formue (sum)", display: true },
+      title: { text: "Formue (sum)", display: false },
     }
   );
 
@@ -44,7 +44,7 @@ export const createCharts = () => {
         { backgroundColor: ["#149dcf", "#a6c736", "#ed5050","#850e28ff", "#e19d14ff", "#3625bdff"], borderColor: "rgb(255, 255, 255)", borderWidth: 1, data: [1,1,1,1,1,1] },
       ],
     },
-    { title: { text: "Bosituasjon (sum)", display: true } }
+    { title: { text: "Bosituasjon (sum)", display: false } }
   );
 }
 

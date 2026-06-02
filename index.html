@@ -17,8 +17,8 @@
       }
     </script>
     <script type="module" src="https://js.arcgis.com/4.34/map-components/"></script>
-    <link id="jsapi-theme-light" rel="stylesheet" href="https://js.arcgis.com/4.34/@arcgis/core/assets/esri/themes/light/main.css" disabled>
-    <link id="jsapi-theme-dark" rel="stylesheet" href="https://js.arcgis.com/4.34/@arcgis/core/assets/esri/themes/dark/main.css" />
+    <link id="jsapi-theme-light" rel="stylesheet" href="https://js.arcgis.com/4.34/@arcgis/core/assets/esri/themes/light/main.css" >
+    <link id="jsapi-theme-dark" rel="stylesheet" href="https://js.arcgis.com/4.34/@arcgis/core/assets/esri/themes/dark/main.css">
 
     <!-- ArcGIS Calcite Design System -->
     <script src="https://js.arcgis.com/calcite-components/3.3.3/calcite.esm.js" type="module"></script>
@@ -29,11 +29,11 @@
     <link rel="stylesheet" href="./css/main.css" />    
   </head>
   <body>
-    <div id="calcite-theme" class="calcite-mode-dark">
+    <div id="calcite-theme" class="calcite-mode-light">
       <calcite-shell content-behind>
         <calcite-navigation slot="header">
           <calcite-navigation-logo slot="logo"></calcite-navigation-logo>
-          <calcite-navigation-user slot="user"></calcite-navigation-user>
+          <!--calcite-navigation-user slot="user"></calcite-navigation-user-->
         </calcite-navigation>
 
         <calcite-loader active></calcite-loader>
@@ -45,7 +45,7 @@
               <calcite-action data-action-id="volume" icon="cut-and-fill-volume-calculation" text="Volumanalyser"></calcite-action>
             </calcite-action-bar>
           </calcite-panel>
-
+       
           <calcite-panel data-panel-id="pop-query" heading="Befolkningsstatistikk" scale="l">
             <calcite-block  heading="Statistikk for området" icon-start="chart-magnifying-glass" description="Klikk og dra musepekeren i kartet for å oppdatere statistikken" collapsible expanded>
               <calcite-block-section expanded text="Alderfordeling, mann vs kvinne">
@@ -54,7 +54,7 @@
               <calcite-block-section expanded text="Formue">
                 <canvas id="population-wealth" class="pop-chart"></canvas>
               </calcite-block-section>
-              <calcite-block-section expanded text="Bygningstyper">
+              <calcite-block-section expanded text="Boligtype">
                 <canvas id="building-type" class="pop-chart"></canvas>
               </calcite-block-section>
             </calcite-block>
@@ -124,8 +124,9 @@
           </calcite-panel>
         </calcite-shell-panel-->
 
-        <arcgis-map id="mapDiv" item-id="5c5fdf55cfed43109373ead88f8901bc" auto-destroy-disabled>
-          <arcgis-search position="bottom-right"></arcgis-search>
+        <!--arcgis-map id="mapDiv" item-id="5c5fdf55cfed43109373ead88f8901bc" auto-destroy-disabled--> <!-- Dark theme -->
+        <arcgis-map id="mapDiv" item-id="9331c14d851c432fb4480884048c2fe8" auto-destroy-disabled></arcgis-map> <!-- Light theme -->
+          <arcgis-search position="top-right"></arcgis-search>
           <arcgis-zoom position="bottom-right"></arcgis-zoom>
         </arcgis-map>
 

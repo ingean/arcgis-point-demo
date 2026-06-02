@@ -4,7 +4,7 @@ import esriId from '@arcgis/core/identity/IdentityManager.js'
 
 let info = null
 
-const userElement = document.querySelector("calcite-navigation-user")
+//const userElement = document.querySelector("calcite-navigation-user")
 
 export const authenticate = (appId) => {
   registerInfo(appId)
@@ -13,11 +13,11 @@ export const authenticate = (appId) => {
       const portal = new Portal() // User is signed in
       portal.authMode = "immediate"
       portal.load().then(() => {
-        updateUIforSignOut(portal.user)
+        //updateUIforSignOut(portal.user)
         return resolve(portal)
       })
     }).catch(() => {
-      updateUIforSignIn() // User is not signed in
+      //updateUIforSignIn() // User is not signed in
       signIn()
       resolve()
     })
@@ -39,7 +39,7 @@ const signIn = () => {
 }
 
 const signOut = () => {
-  updateUIforSignIn()
+  //updateUIforSignIn()
   esriId.destroyCredentials()
   window.location.reload()
 }
